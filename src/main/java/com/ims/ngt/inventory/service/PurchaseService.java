@@ -36,8 +36,11 @@ public class PurchaseService {
         invoice.setInvoiceNo(dto.getInvoiceNo());
         invoice.setInvoiceDate(dto.getInvoiceDate());
         invoice.setSupplier(supplier);
+        invoice.setWarehouse(warehouse);
+        BigDecimal total = BigDecimal.ZERO;
 
-        invoiceRepo.save(invoice);
+
+        invoice = invoiceRepo.save(invoice);
 
         for (PurchaseItemDto itemDto : dto.getItems()) {
 
@@ -46,11 +49,24 @@ public class PurchaseService {
             Unit unit = unitRepo.findById(itemDto.getUnitId())
                     .orElseThrow();
 
-            BigDecimal baseQty =
-                    itemDto.getQuantity().multiply(unit.getConversionFactor());
+            BigDecimal factor =
+                    unit.getConversionFactor() != null
+                            ? unit.getConversionFactor()
+                            : BigDecimal.ONE;
+
+            BigDecimal baseQty = itemDto.getQuantity().multiply(factor);
+
+            BigDecimal lineAmount =
+                    itemDto.getPurchasePrice().multiply(itemDto.getQuantity());
+            total = total.add(lineAmount);
+
+
+
+
 
             // Save purchase item
             PurchaseItem item = new PurchaseItem();
+            item.setAmount(lineAmount);
             item.setPurchaseInvoice(invoice);
             item.setProduct(product);
             item.setUnit(unit);
@@ -84,5 +100,7 @@ public class PurchaseService {
             sm.setCreatedAt(LocalDateTime.now());
             movementRepo.save(sm);
         }
+        invoice.setTotalAmount(total);
+        invoiceRepo.save(invoice);
     }
 }

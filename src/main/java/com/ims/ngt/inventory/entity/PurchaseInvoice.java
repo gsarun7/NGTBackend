@@ -22,6 +22,11 @@ public class PurchaseInvoice {
 
     private BigDecimal totalAmount;
 
+    private BigDecimal quantity = BigDecimal.ZERO;
+
+    @ManyToOne
+    private Warehouse warehouse;
+
     @OneToMany(mappedBy = "purchaseInvoice", cascade = CascadeType.ALL)
     private List<PurchaseItem> items;
 }

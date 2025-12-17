@@ -1,0 +1,8 @@
+package com.ims.ngt.inventory.repository;
+
+import com.ims.ngt.inventory.entity.SalesInvoiceItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SalesInvoiceItemRepository
+        extends JpaRepository<SalesInvoiceItem, Long> {
+}

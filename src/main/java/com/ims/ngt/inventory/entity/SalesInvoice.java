@@ -17,6 +17,9 @@ public class SalesInvoice {
     private LocalDate invoiceDate;
 
     @ManyToOne
+    private Warehouse warehouse;
+
+    @ManyToOne
     private Customer customer;
 
     private BigDecimal totalAmount;
