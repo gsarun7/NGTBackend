@@ -26,7 +26,10 @@ public class ProductService {
     public ProductResponseDto create(ProductRequestDto dto) {
 
         if (productRepo.existsByNameIgnoreCase(dto.getName())) {
-            throw new RuntimeException("Product already exists");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Product already exists"
+            );
         }
 
         Category category = categoryRepo.findById(dto.getCategoryId())
@@ -38,7 +41,7 @@ public class ProductService {
         Unit unit = unitRepo.findById(dto.getBaseUnitId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Invalid Unit: " + dto.getBaseUnitId()
+                        "Invalid unitId: " + dto.getBaseUnitId()
                 ));
 
         Product product = new Product();
@@ -46,25 +49,24 @@ public class ProductService {
         product.setHsn(dto.getHsn());
         product.setCategory(category);
         product.setBaseUnit(unit);
+        product.setActive(true);
 
         productRepo.save(product);
-        return toDto(product);
+
+        return ProductResponseDto.from(product);
     }
 
     public List<ProductResponseDto> getAll() {
-        return productRepo.findAll().stream()
-                .map(this::toDto)
+        return productRepo.findAll()
+                .stream()
+                .map(ProductResponseDto::from)
                 .toList();
     }
 
-    private ProductResponseDto toDto(Product p) {
-        ProductResponseDto dto = new ProductResponseDto();
-        dto.setId(p.getId());
-        dto.setName(p.getName());
-        dto.setHsn(p.getHsn());
-        dto.setCategory(p.getCategory().getName());
-        dto.setBaseUnit(p.getBaseUnit().getName());
-        dto.setActive(p.isActive());
-        return dto;
+    public List<ProductResponseDto> getByCategory(Long categoryId) {
+        return productRepo.findByCategoryId(categoryId)
+                .stream()
+                .map(ProductResponseDto::from)
+                .toList();
     }
 }

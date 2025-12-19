@@ -1,30 +1,37 @@
 package com.ims.ngt.inventory.controller;
 
-
-import com.ims.ngt.inventory.dto.*;
 import com.ims.ngt.inventory.dto.StockLedgerRowDto;
 import com.ims.ngt.inventory.service.StockLedgerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
+
 @RestController
 @RequestMapping("/api/stock-ledger")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class StockLedgerController {
 
-    private final StockLedgerService ledgerService;
+    private final StockLedgerService stockLedgerService;
 
     @GetMapping
-    public List<StockLedgerRowDto> getLedger(
+    public Page<StockLedgerRowDto> getLedger(
             @RequestParam Long productId,
             @RequestParam Long warehouseId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate
+            @RequestParam LocalDate fromDate,
+            @RequestParam LocalDate toDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        return ledgerService.getLedger(productId, warehouseId, fromDate, toDate);
+        return stockLedgerService.getLedger(
+                productId,
+                warehouseId,
+                fromDate,
+                toDate,
+                page,
+                size
+        );
     }
 }
-

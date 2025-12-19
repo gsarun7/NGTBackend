@@ -22,8 +22,15 @@ public class ProductController {
         return ResponseEntity.ok(productService.create(dto));
     }
 
+    // ✅ SUPPORTS /api/products AND /api/products?categoryId=1
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getAll() {
+    public ResponseEntity<List<ProductResponseDto>> getAll(
+            @RequestParam(required = false) Long categoryId
+    ) {
+        if (categoryId != null) {
+            return ResponseEntity.ok(productService.getByCategory(categoryId));
+        }
         return ResponseEntity.ok(productService.getAll());
     }
+
 }
