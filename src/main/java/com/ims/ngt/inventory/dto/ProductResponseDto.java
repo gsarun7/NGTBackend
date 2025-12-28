@@ -11,6 +11,7 @@ public class ProductResponseDto {
     private String name;
     private String hsn;
     private Long categoryId;
+
     private String categoryName;
     private String unit;
 

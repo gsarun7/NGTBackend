@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface StockRepository extends JpaRepository<Stock, Long> {
@@ -38,5 +39,19 @@ GROUP BY p.id, p.name, s.quantity, u.name, p.hsn
             @Param("categoryId") Long categoryId,
             @Param("warehouseId") Long warehouseId,
             Pageable pageable
+    );
+
+
+
+
+    @Query("""
+    SELECT s.quantity
+    FROM Stock s
+    WHERE s.product.id = :productId
+      AND s.warehouse.id = :warehouseId
+  """)
+    Optional<BigDecimal> findCurrentStock(
+            Long productId,
+            Long warehouseId
     );
 }

@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/sales/return")
+@RequestMapping("/api/sales-return")
 @RequiredArgsConstructor
 public class SalesReturnController {
 
