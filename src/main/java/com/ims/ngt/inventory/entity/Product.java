@@ -12,6 +12,9 @@ public class Product {
 
     private String name;
     private String hsn;
+    private String brand;
+    private Integer rate;
+    private String grade;
     private boolean active = true;
 
     @ManyToOne

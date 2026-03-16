@@ -34,7 +34,7 @@ public class SalesService {
                     Customer c = new Customer();
                     c.setName(dto.getCustomerName());
                     c.setPhone(dto.getCustomerPhone());
-                    c.setAddress(dto.getCustomerAddress());
+                    //c.setAddress(dto.getCustomerAddress());
                     c.setGstNo(dto.getCustomerGstNo());
                     return customerRepo.save(c);
                 });
